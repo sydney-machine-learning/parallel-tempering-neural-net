@@ -1,0 +1,31 @@
+ADAM winequality-red 0.827524575514 0.764111204718                                                             
+SGD winequality-red 0.767649687221 0.725358045493                                                                 
+RF winequality-red 0.983914209115 0.879528222409                                                               
+
+ADAM winequality-white 0.63243873979 0.614191193247                                                            
+SGD winequality-white 0.620186697783 0.607118412047                                                            
+RF winequality-white 0.98512252042 0.890714122747                                                              
+
+ADAM iris 0.990476190476 0.975806451613                                                                        
+SGD iris 0.990476190476 0.975806451613                                                                         
+RF iris 1.0 0.975806451613                                                                                     
+
+ADAM Ionosphere 1.0 0.983870967742                                                                             
+SGD Ionosphere 0.990476190476 0.975806451613                                                                   
+RF Ionosphere 0.990476190476 0.967741935484                                                                    
+
+ADAM Cancer 1.0 0.983870967742                                                                                 
+SGD Cancer 0.990476190476 0.975806451613                                                                       
+RF Cancer 0.990476190476 0.967741935484                                                                        
+
+ADAM bank-additional 0.805196467426 0.79012345679                                                              
+SGD bank-additional 0.804172532958 0.793012871027                                                              
+RF bank-additional 0.990528606169 0.919621749409                                                               
+
+ADAM PenDigit 0.801868680404 0.791962174941                                                                    
+SGD PenDigit 0.802636631256 0.79012345679                                                                      
+RF PenDigit 0.988352745424 0.914368268978                                                                      
+
+ADAM chess 1.0 1.0                                                                                             
+SGD chess 1.0 1.0                                                                                              
+RF chess 1.0 1.0 
