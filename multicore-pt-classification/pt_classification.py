@@ -444,8 +444,8 @@ class ptReplica(multiprocessing.Process):
 				if not self.parameter_queue.empty() : 
 					try:
 						result =  self.parameter_queue.get()
-						#w= result[0:w.size]     
-						#eta = result[w.size]
+						w= result[0:w.size]     
+						eta = result[w.size]
 						#likelihood = result[w.size+1]
 					except:
 						print ('error') 
