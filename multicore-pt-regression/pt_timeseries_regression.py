@@ -551,7 +551,7 @@ class ParallelTempering:
 			raise ValueError('``Tmax`` must be greater than 1.')
 		if ntemps is not None and (type(ntemps) != int or ntemps < 1):
 			raise ValueError('Invalid number of temperatures specified.')
-
+'''
 		tstep = np.array([25.2741, 7., 4.47502, 3.5236, 3.0232,
 						  2.71225, 2.49879, 2.34226, 2.22198, 2.12628,
 						  2.04807, 1.98276, 1.92728, 1.87946, 1.83774,
@@ -573,6 +573,17 @@ class ParallelTempering:
 						  1.27397, 1.27227, 1.27061, 1.26898, 1.26737,
 						  1.26579, 1.26424, 1.26271, 1.26121,
 						  1.25973])
+'''
+        maxtemp = Tmax
+        numchain = ntemps
+        b=[]
+        b.append(maxtemp)
+        last=maxtemp
+        for i in range(maxtemp):
+            last = last*(numchain**(-1/(numchain-1)))
+            b.append(last)
+        tstep = np.array(b)
+        
 
 		if ndim > tstep.shape[0]:
 			# An approximation to the temperature step at large
@@ -670,13 +681,17 @@ class ParallelTempering:
 			except OverflowError:
 				swap_proposal = 1
 			u = np.random.uniform(0,1)
+			swapped = False
 			if u < swap_proposal: 
 				self.total_swap_proposals += 1
 				self.num_swap += 1
 				param_temp =  param1
 				param1 = param2
 				param2 = param_temp
-			return param1, param2
+				swapped = True
+			else:
+				swapped = False
+			return param1, param2, swapped
 		else:
 			self.total_swap_proposals += 1
 			return
@@ -700,6 +715,10 @@ class ParallelTempering:
 		for j in range(0,self.num_chains):        
 			self.chains[j].start()
 		#SWAP PROCEDURE
+
+
+		swaps_appected_main = 0
+		total_swaps_main = 0
 
 		while True:
 			count = 0
