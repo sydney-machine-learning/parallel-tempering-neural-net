@@ -435,7 +435,7 @@ class ptReplica(multiprocessing.Process):
 
 				#x = x + 1
 			#SWAPPING PREP
-			if i%self.swap_interval == 0:
+			if (i+1)%self.swap_interval == 0:
 				param = np.concatenate([w, np.asarray([eta]).reshape(1), np.asarray([likelihood]),np.asarray([self.temperature]),np.asarray([i])])
 				self.parameter_queue.put(param)
 				self.signal_main.set()
@@ -728,7 +728,7 @@ class ParallelTempering:
 
 		swaps_appected_main =0
 		total_swaps_main =0
-		while True:
+        for i in range(int(self.NumSamples/self.swap_interval)):
 			count = 0
 			for index in range(self.num_chains):
 				if not self.chains[index].is_alive():
