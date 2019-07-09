@@ -720,7 +720,7 @@ class ParallelTempering:
 		swaps_appected_main = 0
 		total_swaps_main = 0
 
-		while True:
+        for i in range(int(self.NumSamples/self.swap_interval)):
 			count = 0
 			for index in range(self.num_chains):
 				if not self.chains[index].is_alive():
