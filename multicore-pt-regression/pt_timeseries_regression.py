@@ -438,9 +438,8 @@ class ptReplica(multiprocessing.Process):
                 likelihood1 = result[self.w_size+1]/self.temperature
                 if likelihood != likelihood1:
                     print('Temperature: {} Swapped weights: {}'.format(self.temperature, w[:2]))
-                likelihood = likelihood1
-
-            #elapsed_time = ":".join(Replica.convert_time(time.time() - self.start_time)) 
+                #likelihood = likelihood1
+ 
  
 
         param = np.concatenate([w, np.asarray([eta]).reshape(1), np.asarray([likelihood]),np.asarray([self.adapttemp]),np.asarray([i])])
