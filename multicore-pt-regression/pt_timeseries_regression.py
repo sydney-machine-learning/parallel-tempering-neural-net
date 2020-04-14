@@ -435,10 +435,7 @@ class ptReplica(multiprocessing.Process):
                 result =  self.parameter_queue.get()
                 w = result[0:self.w_size]
                 eta = result[self.w_size]
-                likelihood1 = result[self.w_size+1]/self.temperature
-                if likelihood != likelihood1:
-                    print('Temperature: {} Swapped weights: {}'.format(self.temperature, w[:2]))
-                #likelihood = likelihood1
+                #likelihood1 = result[self.w_size+1]/self.temperature 
  
  
 
