@@ -340,7 +340,7 @@ class ptReplica(multiprocessing.Process):
                 wc_delta = (w- w_prop_gd) 
                 wp_delta = (w_proposal - w_gd )
 
-                sigma_sq = step_w
+                sigma_sq = step_w * step_w
 
                 first = -0.5 * np.sum(wc_delta  *  wc_delta  ) / sigma_sq  # this is wc_delta.T  *  wc_delta /sigma_sq
                 second = -0.5 * np.sum(wp_delta * wp_delta ) / sigma_sq
