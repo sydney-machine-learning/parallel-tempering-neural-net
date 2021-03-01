@@ -336,7 +336,7 @@ class ptReplica(multiprocessing.Process):
                 wc_delta = (w- w_prop_gd) 
                 wp_delta = (w_proposal - w_gd )
 
-                sigma_sq = step_w
+                sigma_sq = step_w * step_w
 
                 first = -0.5 * np.sum(wc_delta  *  wc_delta  ) / sigma_sq  # this is wc_delta.T  *  wc_delta /sigma_sq
                 second = -0.5 * np.sum(wp_delta * wp_delta ) / sigma_sq
@@ -912,7 +912,7 @@ def main():
         #THESE ARE THE HYPERPARAMETERS#
         ###############################
 
-        hidden = 5
+        hidden = 10
         ip = 4 #input
         output = 1
         topology = [ip, hidden, output]
@@ -938,7 +938,7 @@ def main():
 
 
          
-        maxtemp = 5
+        maxtemp = 2
 
         #swap_ratio =  0.04
 
