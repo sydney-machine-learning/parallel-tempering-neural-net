@@ -299,7 +299,7 @@ class ptReplica(multiprocessing.Process):
 
         langevin_count = 0
 
-        pt_samples = samples * 0.6 # this means that PT in canonical form with adaptive temp will work till pt  samples are reached
+        pt_samples = samples * 0.5 # this means that PT in canonical form with adaptive temp will work till pt  samples are reached
 
         init_count = 0
 
@@ -553,7 +553,7 @@ class ParallelTempering:
             raise ValueError('``Tmax`` must be greater than 1.')
         if ntemps is not None and (type(ntemps) != int or ntemps < 1):
             raise ValueError('Invalid number of temperatures specified.')
-        '''
+
         tstep = np.array([25.2741, 7., 4.47502, 3.5236, 3.0232,
                           2.71225, 2.49879, 2.34226, 2.22198, 2.12628,
                           2.04807, 1.98276, 1.92728, 1.87946, 1.83774,
@@ -575,17 +575,16 @@ class ParallelTempering:
                           1.27397, 1.27227, 1.27061, 1.26898, 1.26737,
                           1.26579, 1.26424, 1.26271, 1.26121,
                           1.25973])
-        '''
 
-        maxtemp = Tmax
-        numchain = ntemps
-        b=[]
-        b.append(maxtemp)
-        last=maxtemp
-        for i in range(maxtemp):
-            last = last*(numchain**(-1/(numchain-1)))
-            b.append(last)
-        tstep = np.array(b)
+        # maxtemp = Tmax
+        # numchain = ntemps
+        # b=[]
+        # b.append(maxtemp)
+        # last=maxtemp
+        # for i in range(maxtemp):
+        #     last = last*(numchain**(-1/(numchain-1)))
+        #     b.append(last)
+        # tstep = np.array(b)
         
 
         if ndim > tstep.shape[0]:
@@ -639,7 +638,7 @@ class ParallelTempering:
  
             tmpr_rate = (self.maxtemp /self.num_chains)
             temp = 1
-            for i in xrange(0, self.num_chains):            
+            for i in range(0, self.num_chains):            
                 self.temperatures.append(temp)
                 temp += tmpr_rate
                 print(self.temperatures[i])
@@ -775,6 +774,40 @@ class ParallelTempering:
 
         return pos_w, fx_train, fx_test,  rmse_train, rmse_test, acc_train, acc_test,   likelihood_vec , swap_perc,    accept_vec, accept
 
+    def plot_figure(self, list, title,folder): 
+
+        list_points =  list
+        fname = folder
+        size = 15
+        self.make_directory(fname + '/pos_plots')
+
+        plt.tick_params(labelsize=size)
+        params = {'legend.fontsize': size, 'legend.handlelength': 2}
+        plt.rcParams.update(params)
+        plt.grid(alpha=0.75)
+        plt.hist(list_points,  bins = 20, color='#0504aa',
+                            alpha=0.7)   
+        plt.title("Posterior distribution ", fontsize = size)
+        plt.xlabel(' Parameter value  ', fontsize = size)
+        plt.ylabel(' Frequency ', fontsize = size)
+        plt.tight_layout()  
+        plt.savefig(fname + '/pos_plots/' + title  + '_posterior.pdf')
+        plt.clf()
+
+        plt.tick_params(labelsize=size)
+        params = {'legend.fontsize': size, 'legend.handlelength': 2}
+        plt.rcParams.update(params)
+        plt.grid(alpha=0.75)
+
+        listx = np.asarray(np.split(list_points,  self.num_chains ))
+        plt.plot(listx.T)   
+
+        plt.title("Parameter trace plot", fontsize = size)
+        plt.xlabel(' Number of Samples  ', fontsize = size)
+        plt.ylabel(' Parameter value ', fontsize = size)
+        plt.tight_layout()  
+        plt.savefig(fname + '/pos_plots/' + title  + '_trace.pdf')
+        plt.clf()
 
 
     def show_results(self):
@@ -898,10 +931,10 @@ class ParallelTempering:
 
 def main():
 
-    for i in range(3, 9) :
+    for i in range(3, 4) :
 
 
-        problem = i
+        problem = 5
         separate_flag = False
         print(problem, ' problem')
 
@@ -951,10 +984,10 @@ def main():
             traindata = np.genfromtxt('DATA/Cancer/ftrain.txt',delimiter=' ')[:,:-1]
             testdata = np.genfromtxt('DATA/Cancer/ftest.txt',delimiter=' ')[:,:-1]
             name = "Cancer"
-            hidden = 12
+            hidden = 8 # 12
             ip = 9 #input
             output = 2
-            NumSample =50000
+            NumSample =5000
     
         if problem == 6: #Bank additional
             data = np.genfromtxt('DATA/Bank/bank-processed.csv',delimiter=';')
@@ -1033,21 +1066,22 @@ def main():
 
 
          
-        maxtemp = 10
+        maxtemp = 4
  
         num_chains = 10
         swap_ratio = 0.02 #float(sys.argv[1])
-        swap_interval = int(swap_ratio * NumSample/num_chains)    # int(swap_ratio * (NumSample/num_chains)) #how ofen you swap neighbours. note if swap is more than Num_samples, its off
-        burn_in = 0.5
+        # swap_interval = int(swap_ratio * NumSample/num_chains)    # int(swap_ratio * (NumSample/num_chains)) #how ofen you swap neighbours. note if swap is more than Num_samples, its off
+        swap_interval = 100
+        burn_in = 0.2
      
         learn_rate = 0.01  # in case langevin gradients are used. Can select other values, we found small value is ok. 
 
-        use_langevin_gradients =False # False leaves it as Random-walk proposals. Note that Langevin gradients will take a bit more time computationally
+        use_langevin_gradients = False # False leaves it as Random-walk proposals. Note that Langevin gradients will take a bit more time computationally
 
 
 
 
-        problemfolder = '/home/rohit/Desktop/PT/PT_EvalSwapRW/'  # change this to your directory for results output - produces large datasets
+        problemfolder = 'res/PT_EvalSwapRW/'  # change this to your directory for results output - produces large datasets
 
         problemfolder_db = 'PT_EvalSwapRW/'  # save main results
 
@@ -1090,8 +1124,11 @@ def main():
   
         
         pos_w, fx_train, fx_test,  rmse_train, rmse_test, acc_train, acc_test,   likelihood_rep , swap_perc,    accept_vec, accept = pt.run_chains()
+        print(pos_w.shape)
+        plot_fname = path
+        for s in range(30): # change this if you want to see all pos plots
+            pt.plot_figure(pos_w[s,:], 'pos_distri_'+str(s),plot_fname) 
 
- 
 
         timer2 = time.time()
 
